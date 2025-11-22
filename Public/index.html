@@ -434,7 +434,6 @@
     <script>
         // Configuration - CHANGE THIS PASSWORD!
         const APP_PASSWORD = "admin123";
-        const API_BASE_URL = window.location.origin; // Auto-detect base URL
 
         // DOM Elements
         const loginScreen = document.getElementById('loginScreen');
@@ -620,7 +619,7 @@
             reader.readAsDataURL(file);
         }
 
-        // Upload Handler
+        // Upload Handler - USING ACTUAL API
         async function handleUpload() {
             if (!selectedFile || !isAuthenticated) return;
 
@@ -637,7 +636,7 @@
                 const formData = new FormData();
                 formData.append('photo', selectedFile);
 
-                const response = await fetch(`${API_BASE_URL}/api/upload`, { 
+                const response = await fetch('/api/upload', { 
                     method: 'POST', 
                     body: formData 
                 });
@@ -727,20 +726,20 @@
             sendBtn.disabled = true;
 
             try {
-                // For demo purposes - using local responses
-                const reply = getBotResponse(message);
-                addMessage(reply, 'bot');
-                
-                // If you want to use actual API, uncomment below:
-                /*
-                const response = await fetch(`${API_BASE_URL}/api/telegram`, {
+                // Use actual API for chat
+                const response = await fetch('/api/telegram', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: message })
                 });
+                
                 const result = await response.json();
-                addMessage(result.reply, 'bot');
-                */
+                
+                if (result.success) {
+                    addMessage(result.reply, 'bot');
+                } else {
+                    addMessage('❌ Error: ' + result.message, 'bot');
+                }
 
             } catch (error) {
                 addMessage('❌ Network error. Please try again.', 'bot');
@@ -750,36 +749,12 @@
             messageInput.focus();
         }
 
-        // Bot Responses
-        function getBotResponse(message) {
-            const lowerMessage = message.toLowerCase();
-            
-            if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-                return 'Hello! 👋 How can I assist you today?';
-            } else if (lowerMessage.includes('help')) {
-                return 'I can help you upload images to Telegram channel! Just drag & drop an image above and click "Send to Channel".';
-            } else if (lowerMessage.includes('thank')) {
-                return 'You\'re welcome! 😊 Let me know if you need anything else.';
-            } else if (lowerMessage.includes('how are you')) {
-                return 'I\'m doing great! Ready to help you with image uploads. 📸';
-            } else if (lowerMessage.includes('counter') || lowerMessage.includes('count')) {
-                return `Current upload counter: #${uploadCounter}`;
-            } else if (lowerMessage.includes('feature')) {
-                return 'My features: ✅ Image upload to Telegram ✅ Secure login ✅ Counter system ✅ Chat interface ✅ Mobile responsive';
-            } else {
-                return 'I understand. You can upload images using the upload section above! Try dragging an image to the upload zone.';
-            }
-        }
-
         // Initialize the app when page loads
         document.addEventListener('DOMContentLoaded', initApp);
 
-        // Service Worker-like functionality for offline support
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(console.error);
-        }
-
         console.log('🤖 Telegram Bot Interface Fully Loaded!');
+        console.log('📸 Bot Token: 8017357118:AAEHygULq2bJp7WL5gHormYcgBJdN5aJvLg');
+        console.log('📢 Channel ID: -1002791023344');
     </script>
 </body>
-    </html>
+                            </html>
