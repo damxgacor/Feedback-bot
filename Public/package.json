@@ -1,0 +1,13 @@
+{
+  "name": "telegram-bot-web",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.64.0",
+    "formidable-serverless": "^1.1.1"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'"
+  }
+}
